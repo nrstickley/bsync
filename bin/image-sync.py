@@ -70,6 +70,10 @@ def transfer(local, remote):
 if __name__ == '__main__':
     transfer()
 
+# TODO: perform the fingerprint creation step simultaneusly on both machines. This involves a small change here and
+#       another change in the bsync library. The remote needs to be able to create a patch from the source file and
+#       two fingerprints. This would save approximately 23 seconds in the test case, so the total elapsed time would
+#       be only ~ 40 seconds.
 
 # time ./image-sync.py --local ~/VirtualBoxVMs/LODEEN\ 2.1\ beta\ 2/LODEEN_2.1_beta_2-disk002.vdi -r 'nrstickley@riemann:/home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi'
 # Computing the fingerprint of LODEEN_2.1_beta_2-disk002.vdi
