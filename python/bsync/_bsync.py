@@ -10,7 +10,6 @@ import multiprocessing as mp
 
 import msgpack
 import zstd
-import sh
 
 
 CHUNK_SIZE = 4 * 1024 * 1024
