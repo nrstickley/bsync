@@ -1,4 +1,4 @@
-# /usr/bin/env python3
+#! /usr/bin/python3
 
 import os
 
@@ -47,7 +47,7 @@ def transfer(local, remote):
     print_streams(output)
 
     print("Creating the rawpatch on the remote machine.")
-    output = sh.ssh(login, f"/tmp/rawpatch --master {remote} --fingerprint {remote_fingerprint}")
+    output = sh.ssh(login, f"/tmp/rawpatch --master {remote_path} --fingerprint {remote_fingerprint}")
     remote_patch = output.stdout.decode('utf8')
     print_streams(output)
 
@@ -60,12 +60,29 @@ def transfer(local, remote):
     print_streams(output)
 
     print("Applying the patch")
-    #bsync.apply_rawpatch(local, local_patch)
+    bsync.apply_rawpatch(local, local_patch)
 
     print("The patch has been applied! Deleting the patch file…")
-    #sh.rm(local_patch)
+    sh.rm(local_patch)
 
     print("done")
 
 if __name__ == '__main__':
     transfer()
+
+
+# time ./image-sync.py --local ~/VirtualBoxVMs/LODEEN\ 2.1\ beta\ 2/LODEEN_2.1_beta_2-disk002.vdi -r 'nrstickley@riemann:/home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi'
+# Computing the fingerprint of LODEEN_2.1_beta_2-disk002.vdi
+# Sending the rawpatch script to the remote system.
+# Sending the fingerprint to the remote system: nrstickley@riemann:/tmp/LODEEN_2.1_beta_2-disk002.vdi.fingerprint
+# Creating the rawpatch on the remote machine.
+# /home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi.rawpatch
+# Downloading the patch from the remote machine.
+# Cleaning up the remote files
+# Applying the patch
+# The patch has been applied! Deleting the patch file…
+# done
+# 
+# real    1m2.934s
+# user    1m23.108s
+# sys     0m22.059s
