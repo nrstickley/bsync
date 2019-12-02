@@ -102,6 +102,6 @@ if __name__ == '__main__':
 # The patch has been applied! Deleting the patch file…
 # Done!
 # 
-# real    0m38.679s
-# user    1m28.157s
-# sys     0m25.466s
+# real    0m40.588s
+# user    1m26.924s
+# sys     0m26.547s
