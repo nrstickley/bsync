@@ -105,3 +105,24 @@ if __name__ == '__main__':
 # real    0m40.588s
 # user    1m26.924s
 # sys     0m26.547s
+
+# When the files have not changed:
+
+# time ./image-sync.py --local ~/VirtualBoxVMs/LODEEN\ 2.1\ beta\ 2/LODEEN_2.1_beta_2-disk002.vdi -r 'nrstickley@riemann:/home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi'
+# Sending the rawpatch script to the remote system.
+# Sending the fingerprint script to the remote system.
+# Computing the master fingerprint on the remote machine…
+# ||  Meanwhile, computing the local fingerprint LODEEN_2.1_beta_2-disk002.vdi
+# ||  Sending the fingerprint to the remote system: nrstickley@riemann:/tmp/LODEEN_2.1_beta_2-disk002.vdi.fingerprint
+# ||  waiting for the master fingerprint to be computed…
+# Finished making master fingerprint, /home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi.fingerprint
+# Creating the rawpatch on the remote machine.
+# The file has not changed since the last fingerprint was created.
+# NoChanges
+# The files are already identical.
+# Cleaning up the remote files
+# Done!
+# 
+# real    0m33.606s
+# user    1m28.809s
+# sys     0m26.816s
