@@ -43,26 +43,27 @@ def transfer(local, remote):
     print("Sending the fingerprint script to the remote system.")
     sh.scp(fingerprint_script, f"{login}:/tmp/")
 
-    print("Computing fingerprint on the remote machine.")
-    output = sh.ssh(login, f"/tmp/make-fingerprint --master {remote_path}", _bg=True)
+    print("Computing the master fingerprint on the remote machine…")
+    remote_fingerprint_output = sh.ssh(login, f"/tmp/make-fingerprint --master {remote_path}", _bg=True)
 
-    print("Computing the fingerprint on the local machine", os.path.basename(local))
+    print("||  Meanwhile, computing the local fingerprint", os.path.basename(local))
 
     bsync.save_fingerprint(local)
 
-    output.wait()
-    print_streams(output)
-
-    print(f"Sending the fingerprint to the remote system: {login}:/tmp/{fingerprint_name}")
+    print(f"||  Sending the fingerprint to the remote system: {login}:/tmp/{fingerprint_name}")
     output = sh.scp(local_fingerprint, f"{login}:/tmp/")
     print_streams(output)
+
+    print("||  waiting for the master fingerprint to be computed…")
+    remote_fingerprint_output.wait()
+    print_streams(remote_fingerprint_output)
 
     print("Creating the rawpatch on the remote machine.")
     output = sh.ssh(login, f"/tmp/rawpatch --master {remote_path} --fingerprint {remote_fingerprint}")
     remote_patch = output.stdout.decode('utf8')
     print_streams(output)
 
-    print("Downloading the patch from the remote machine.")
+    print("Retrieving the patch from the remote machine.")
     output = sh.scp(f"{login}:{remote_patch}", f"{local_patch}")
     print_streams(output)
 
@@ -76,23 +77,27 @@ def transfer(local, remote):
     print("The patch has been applied! Deleting the patch file…")
     sh.rm(local_patch)
 
-    print("done")
+    print("Done!")
 
 if __name__ == '__main__':
     transfer()
 
 # time ./image-sync.py --local ~/VirtualBoxVMs/LODEEN\ 2.1\ beta\ 2/LODEEN_2.1_beta_2-disk002.vdi -r 'nrstickley@riemann:/home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi'
-# Computing the fingerprint of LODEEN_2.1_beta_2-disk002.vdi
 # Sending the rawpatch script to the remote system.
-# Sending the fingerprint to the remote system: nrstickley@riemann:/tmp/LODEEN_2.1_beta_2-disk002.vdi.fingerprint
+# Sending the fingerprint script to the remote system.
+# Computing the master fingerprint on the remote machine…
+# ||  Meanwhile, computing the local fingerprint LODEEN_2.1_beta_2-disk002.vdi
+# ||  Sending the fingerprint to the remote system: nrstickley@riemann:/tmp/LODEEN_2.1_beta_2-disk002.vdi.fingerprint
+# ||  waiting for the master fingerprint to be computed…
+# Finished making master fingerprint, /home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi.fingerprint
 # Creating the rawpatch on the remote machine.
 # /home/nrstickley/LODEEN_2.1_beta_2-disk002.vdi.rawpatch
-# Downloading the patch from the remote machine.
+# Retrieving the patch from the remote machine.
 # Cleaning up the remote files
 # Applying the patch
 # The patch has been applied! Deleting the patch file…
-# done
+# Done!
 # 
-# real    1m2.934s
-# user    1m23.108s
-# sys     0m22.059s
+# real    0m38.679s
+# user    1m28.157s
+# sys     0m25.466s
