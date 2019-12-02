@@ -63,19 +63,23 @@ def transfer(local, remote):
     remote_patch = output.stdout.decode('utf8')
     print_streams(output)
 
-    print("Retrieving the patch from the remote machine.")
-    output = sh.scp(f"{login}:{remote_patch}", f"{local_patch}")
-    print_streams(output)
+    if 'NoChanges' in remote_patch:
+        print("The files are already identical.")
+        print("Cleaning up the remote files")
+        output = sh.ssh(login, f"rm {remote_fingerprint}")
+        print_streams(output)
+    else:
+        print("Retrieving the patch from the remote machine.")
+        output = sh.scp(f"{login}:{remote_patch}", f"{local_patch}")
+        print("Cleaning up the remote files")
+        output = sh.ssh(login, f"rm {remote_fingerprint} {remote_patch}")
+        print_streams(output)
 
-    print("Cleaning up the remote files")
-    output = sh.ssh(login, f"rm {remote_fingerprint} {remote_patch}")
-    print_streams(output)
+        print("Applying the patch")
+        bsync.apply_rawpatch(local, local_patch)
 
-    print("Applying the patch")
-    bsync.apply_rawpatch(local, local_patch)
-
-    print("The patch has been applied! Deleting the patch file…")
-    sh.rm(local_patch)
+        print("The patch has been applied! Deleting the patch file…")
+        sh.rm(local_patch)
 
     print("Done!")
 

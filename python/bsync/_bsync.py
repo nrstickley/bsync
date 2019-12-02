@@ -133,11 +133,13 @@ def make_rawpatch(filename: str, fingerprint: str, use_existing_fingerprint=Fals
 
     if len(changes) == 0:
         print("The file has not changed since the last fingerprint was created.")
-        return
+        return False
 
     rawpatch = compute_rawpatch(filename, changes)
 
     save_rawpatch(filename + '.rawpatch', rawpatch)
+
+    return True
 
 
 def apply_rawpatch(old_file: str, rawpatch: str):
