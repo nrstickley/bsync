@@ -1,0 +1,17 @@
+#! /usr/bin/python3
+
+import os
+
+import click
+
+import bsync
+
+
+@click.command()
+@click.option('--master', '-l', required=True, type=click.Path(exists=True), help="The name of the master (local) file.")
+def make_fingerprint(master):
+    bsync.save_fingerprint(master)
+    print(f"Finished making master fingerprint, {master}.fingerprint", end='')
+
+if __name__ == '__main__':
+    make_fingerprint()
