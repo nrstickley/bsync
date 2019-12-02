@@ -87,11 +87,14 @@ def load_msg(filename: str) -> list:
     return hashes
 
 
-def what_changed(filename: str, fingerprint: str) -> list:
+def what_changed(filename: str, fingerprint: str, use_existing_fingerprint) -> list:
     """Determine which chunks changed between the current version and the hashed version"""
     old_fingerprint = load_msg(fingerprint)
 
-    current_fingerprint = make_fingerprint(filename)
+    if use_existing_fingerprint:
+        current_fingerprint = load_msg(filename + '.fingerprint')
+    else:
+        current_fingerprint = make_fingerprint(filename)
 
     return compare_fingerprints(old_fingerprint, current_fingerprint)
 
@@ -124,8 +127,9 @@ def save_rawpatch(filename: str, rawpatch: dict):
         f.write(compressed_patch)
 
 
-def make_rawpatch(filename: str, fingerprint: str):
-    changes = what_changed(filename, fingerprint)
+def make_rawpatch(filename: str, fingerprint: str, use_existing_fingerprint=False):
+
+    changes = what_changed(filename, fingerprint, use_existing_fingerprint)
 
     if len(changes) == 0:
         print("The file has not changed since the last fingerprint was created.")
