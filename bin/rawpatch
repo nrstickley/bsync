@@ -11,7 +11,7 @@ import bsync
 @click.option('--master', '-l', required=True, type=click.Path(exists=True), help="The name of the master (local) file.")
 @click.option('--fingerprint', '-r', required=True, type=click.Path(exists=True), help="The name of the fingerprint file.")
 def make_patch(master, fingerprint):
-    bsync.make_rawpatch(master, fingerprint)
+    bsync.make_rawpatch(master, fingerprint, use_existing_fingerprint=True)
     raw_patch = os.path.abspath(master)
     print(f"{raw_patch}.rawpatch", end='')
 
