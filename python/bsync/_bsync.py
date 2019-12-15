@@ -157,19 +157,3 @@ def apply_rawpatch(old_file: str, rawpatch: str):
         f.write(chunk)
 
     f.close()
-
-
-# general steps when performing a typical update on a 60 GB disk image:
-
-# 1. The client computes the fingerprint of their version of the file, using save_fingerprint()  ~ 30 seconds
-# 2. The client sends the fingerprint to the server.                                             ~ 0 seconds
-# 3. The server compares the master version of the disk image to the client's fingerprint and
-#    creates a raw patch, using make_rawpatch()                                                  ~ 30 seconds
-# 4. The server sends the raw patch back to the client.                                          ~ 2 - 10 seconds
-# 5. The client applies the raw patch to their version of the file, using apply_rawpatch() and
-#    now has a copy that is identical to the master.                                             ~ 1 - 4 seconds
-
-# total time: 1 minute 7 seconds
-
-# total time needed to copy the entire file over the network: ~ 9 minutes
-
